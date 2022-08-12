@@ -9,6 +9,12 @@ import (
 )
 
 func redirect(ctx *gin.Context) {
+	scopeQuery, exist := ctx.GetQuery("scope")
+	if !exist {
+		ctx.JSON(http.StatusBadRequest, "scope is required.")
+	}
+	scope = scopeQuery
+	OAuthEndpoint := fmt.Sprintf(authUrlFormat, client_id, redirect_uri, genScopeUrlEncode(), state, code_challenge)
 	ctx.Redirect(http.StatusFound, OAuthEndpoint)
 }
 
@@ -20,21 +26,27 @@ func code(ctx *gin.Context) {
 		log.Println("code callback error: ", errMsg)
 		errDes, errExist := ctx.GetQuery("error_description")
 		if errExist {
-			log.Fatalln("code callback error_description: ", errDes)
+			log.Println("code callback error_description: ", errDes)
+			tokenResponse = errDes
 		} else {
-			log.Fatal()
+			tokenResponse = "unkown error."
 		}
+		ctx.Redirect(302, "http://localhost:5001/display")
+		return
 	}
 
 	code, codeExist := ctx.GetQuery("code")
 	if !codeExist {
-		log.Fatalln("code not exist.")
+		log.Println("code not exist.")
+		tokenResponse = "code not exist."
+		ctx.Redirect(302, "http://localhost:5001/display")
+		return
 	}
 	log.Printf("code: %v", code)
 
 	err := getToken(ctx, fmt.Sprintf("%v", code))
 	if err != nil {
-		log.Fatalln("get token err: ", err)
+		log.Println("get token err: ", err)
 	}
 
 	if tokenResponse != "" {

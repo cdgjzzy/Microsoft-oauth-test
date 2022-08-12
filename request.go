@@ -15,7 +15,7 @@ func getToken(ctx *gin.Context, code string) (err error) {
 	log.Println("get token request")
 
 	bodyFormat := "client_id=%s&code=%s&redirect_uri=%s&grant_type=authorization_code&code_verifier=%s&scope=%s"
-	var body = strings.NewReader(fmt.Sprintf(bodyFormat, client_id, code, redirect_uri, code_verifier, "https://outlook.office.com/mail.send"))
+	var body = strings.NewReader(fmt.Sprintf(bodyFormat, client_id, code, redirect_uri, code_verifier, genScopeUrlEncode()))
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", tokenUri, body)
 	req.Header.Add("Origin", "*")

@@ -10,6 +10,6 @@ client_id、client_secret 配置位于configs.go文件中，需要自行补充
 
 已有编译好的exe，可直接运行
 
-浏览器访问localhost:5001/redirect即可跳转授权界面
+浏览器访问`localhost:5001/redirect?scope=xxxxx`即可跳转授权界面,为了方便测试，`scope` 只能是一个
 
 程序会在控制台打印最终结果
