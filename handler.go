@@ -17,7 +17,13 @@ func code(ctx *gin.Context) {
 
 	errMsg, errExist := ctx.GetQuery("error")
 	if errExist {
-		log.Fatalln("code callback error: ", errMsg)
+		log.Println("code callback error: ", errMsg)
+		errDes, errExist := ctx.GetQuery("error_description")
+		if errExist {
+			log.Fatalln("code callback error_description: ", errDes)
+		} else {
+			log.Fatal()
+		}
 	}
 
 	code, codeExist := ctx.GetQuery("code")
